@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/PRN232.Lab2.CoffeeStore.API.props" />
-</Project>

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Repositories", "PRN232.Lab2.CoffeeStore.Repositories\PRN232.Lab2.CoffeeStore.Repositories.csproj", "{B953581D-63CD-4939-9128-AD2DC568CB5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Models", "PRN232.Lab2.CoffeeStore.Models\PRN232.Lab2.CoffeeStore.Models.csproj", "{49D5BC4A-7571-4035-9BD5-110E69903102}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B953581D-63CD-4939-9128-AD2DC568CB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B953581D-63CD-4939-9128-AD2DC568CB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B953581D-63CD-4939-9128-AD2DC568CB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49D5BC4A-7571-4035-9BD5-110E69903102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49D5BC4A-7571-4035-9BD5-110E69903102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49D5BC4A-7571-4035-9BD5-110E69903102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49D5BC4A-7571-4035-9BD5-110E69903102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

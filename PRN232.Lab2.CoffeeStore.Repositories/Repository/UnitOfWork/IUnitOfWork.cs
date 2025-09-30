@@ -2,11 +2,10 @@ using PRN232.Lab2.CoffeeStore.Repositories.Repository.GenericRepository;
 
 namespace PRN232.Lab2.CoffeeStore.Repositories.Repository.UnitOfWork;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
-    IGenericRepository<T, TId> GetRepository<T, TId>()
-        where T : class
-        where TId : notnull;
+    // IProductRepository Products { get; }
+    // IOrderRepository Orders { get; }
 
-    Task<int> SaveChangesAsync();
+    Task<int> CompleteAsync();
 }

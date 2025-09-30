@@ -1,0 +1,50 @@
+## .gitignore file for .NET projects
+## Optimized for Rider on macOS/Linux and Visual Studio
+## Build output
+[Bb]in/
+[Oo]bj/
+
+## IDE specific
+Rider
+.idea/
+
+Visual Studio
+.vs/
+*.suo
+*.user
+
+Visual Studio Code
+.vscode/
+
+## OS generated files
+macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Windows
+Thumbs.db
+ehthumbs.db
+
+## Project files
+Rider - reformat marker
+*.DotSettings.user
+
+## Local configuration files
+These files might contain sensitive information like connection strings with passwords.
+It's a good practice to ignore them and use User Secrets or environment variables for production.
+For this lab, you can decide whether to commit it or not. Ignoring it is safer.
+appsettings.Development.json
+secrets.json
+
+## Miscellaneous
+NuGet packages folder (for older project types)
+packages/
+
+Test results
+TestResults/
+
+Log files
+*.log
+
+EF Core database model
+*.dbmdl
