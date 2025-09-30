@@ -1,20 +1,21 @@
 using System.Linq.Expressions;
-using PRN232.Lab2.CoffeeStore.Models.Request;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
 
-namespace PRN232.Lab2.CoffeeStore.Repositories.Repository.GenericRepository;
+namespace PRN232.Lab2.CoffeeStore.Repositories.IRepository;
 
-public interface IGenericRepository<T> where T : class
+public interface IGenericRepository<T, TKey> where T : class
 {
-    Task<T> GetByIdAsync(int id);
+    Task<T?> GetByIdAsync(TKey id);
 
     Task<IEnumerable<T>> GetAllAsync();
 
     Task AddAsync(T entity);
 
-    void Update(T entity);
+    // Đã chuyển sang async
+    Task UpdateAsync(T entity);
 
-    void Delete(T entity);
+    // Đã chuyển sang async
+    Task DeleteAsync(T entity);
 
     Task<PagedList<T>> GetPagedListAsync(
         RequestParameters parameters,
