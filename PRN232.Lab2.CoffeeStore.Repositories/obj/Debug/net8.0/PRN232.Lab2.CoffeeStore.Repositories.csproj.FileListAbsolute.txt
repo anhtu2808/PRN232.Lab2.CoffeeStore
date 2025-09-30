@@ -1,0 +1,14 @@
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/bin/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.deps.json
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/bin/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.dll
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/bin/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.pdb
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.GeneratedMSBuildEditorConfig.editorconfig
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.AssemblyInfoInputs.cache
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.AssemblyInfo.cs
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.csproj.CoreCompileInputs.cache
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.dll
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/refint/PRN232.Lab2.CoffeeStore.Repositories.dll
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.pdb
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/ref/PRN232.Lab2.CoffeeStore.Repositories.dll
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/bin/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.runtimeconfig.json
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.csproj.AssemblyReference.cache
+/Users/anhtu/Documents/Uni/SEMESTER8/PRN232/Practice/PRN232.Lab2.CoffeeStore/PRN232.Lab2.CoffeeStore.Repositories/obj/Debug/net8.0/PRN232.Lab2.CoffeeStore.Repositories.genruntimeconfig.cache
