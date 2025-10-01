@@ -31,11 +31,14 @@ public class ErrorCode
     public static readonly ErrorCode EmailAlreadyExists =
         new(HttpStatusCode.BadRequest, "Email already exists.");
 
-    //401 Unauthorized
-    public static readonly ErrorCode Unauthorized = new(HttpStatusCode.Unauthorized, "Unauthorized access.");
+    //401 Unauthenticated
+    public static readonly ErrorCode InvalidToken = new(HttpStatusCode.Unauthorized, "Invalid token.");
+    
+    
 
     public static readonly ErrorCode InvalidUsernameOrPassword =
         new(HttpStatusCode.Unauthorized, "Invalid username or password.");
 
     //403 Forbidden
+    public static readonly ErrorCode Unauthorized = new(HttpStatusCode.Unauthorized, "Unauthorized access.");
 }

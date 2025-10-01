@@ -33,9 +33,11 @@ public class AuthService : IAuthService
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        var user = await _unitOfWork.Users.GetByUsernameAndPasswordAsync(request.Username, request.Password);
-        if (user == null)
+        var user = await _unitOfWork.Users.GetFirstOrDefaultAsync(u =>
+            u.Username == request.Username);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
             throw new AppException(ErrorCode.InvalidUsernameOrPassword);
         }
