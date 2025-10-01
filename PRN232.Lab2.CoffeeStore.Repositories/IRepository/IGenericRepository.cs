@@ -23,4 +23,9 @@ public interface IGenericRepository<T, TKey> where T : class
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         string? includeProperties = ""
     );
+    
+    Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, bool>> filter, 
+        string? includeProperties = ""
+    );
 }

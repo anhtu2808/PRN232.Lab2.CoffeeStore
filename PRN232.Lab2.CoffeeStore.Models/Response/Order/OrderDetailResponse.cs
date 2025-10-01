@@ -1,4 +1,4 @@
-namespace PRN232.Lab2.CoffeeStore.Models.Response;
+namespace PRN232.Lab2.CoffeeStore.Models.Response.Order;
 
 public record OrderDetailResponse(
     int OrderDetailId,

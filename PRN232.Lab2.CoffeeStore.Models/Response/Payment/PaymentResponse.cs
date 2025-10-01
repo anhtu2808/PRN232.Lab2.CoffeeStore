@@ -1,4 +1,4 @@
-namespace PRN232.Lab2.CoffeeStore.Models.Response;
+namespace PRN232.Lab2.CoffeeStore.Models.Response.Payment;
 
 public record PaymentResponse(
     int PaymentId,

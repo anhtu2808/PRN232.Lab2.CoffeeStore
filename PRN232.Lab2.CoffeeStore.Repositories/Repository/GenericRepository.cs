@@ -11,8 +11,9 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
 {
     private readonly CoffeeStoreDbContext _context;
     private readonly DbSet<T> _dbSet;
+    private IGenericRepository<T, TKey> _genericRepositoryImplementation;
 
-    public GenericRepository(CoffeeStoreDbContext context) 
+    public GenericRepository(CoffeeStoreDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
@@ -40,11 +41,11 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
         return Task.CompletedTask;
     }
 
-    
+
     public Task DeleteAsync(T entity)
     {
         _dbSet.Remove(entity);
-        return Task.CompletedTask; 
+        return Task.CompletedTask;
     }
 
     public async Task<PagedList<T>> GetPagedListAsync(
@@ -63,7 +64,7 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
         if (!string.IsNullOrWhiteSpace(includeProperties))
         {
             foreach (var includeProperty in includeProperties.Split
-                (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                         (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty.Trim());
             }
@@ -84,7 +85,26 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
             .Skip((parameters.Page - 1) * parameters.PageSize)
             .Take(parameters.PageSize)
             .ToListAsync();
-        
+
         return new PagedList<T>(items, totalCount, parameters.Page, parameters.PageSize);
+    }
+
+    public async Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, bool>> filter,
+        string? includeProperties = "")
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (!string.IsNullOrWhiteSpace(includeProperties))
+        {
+            foreach (var includeProperty in includeProperties.Split
+                         (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty.Trim());
+            }
+        }
+
+        // Áp dụng bộ lọc và trả về phần tử đầu tiên hoặc null
+        return await query.FirstOrDefaultAsync(filter);
     }
 }

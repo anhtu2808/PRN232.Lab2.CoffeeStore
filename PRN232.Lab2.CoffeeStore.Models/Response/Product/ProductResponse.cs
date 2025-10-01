@@ -1,4 +1,4 @@
-namespace PRN232.Lab2.CoffeeStore.Models.Response;
+namespace PRN232.Lab2.CoffeeStore.Models.Response.Product;
 
 public record ProductResponse(
     int ProductId,
