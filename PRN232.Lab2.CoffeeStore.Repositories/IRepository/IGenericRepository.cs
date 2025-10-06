@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
+using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 
 namespace PRN232.Lab2.CoffeeStore.Repositories.IRepository;
 
@@ -17,7 +18,7 @@ public interface IGenericRepository<T, TKey> where T : class
     // Đã chuyển sang async
     Task DeleteAsync(T entity);
 
-    Task<PagedList<T>> GetPagedListAsync(
+    Task<PageResponse<T>> GetPagedListAsync(
         RequestParameters parameters,
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,

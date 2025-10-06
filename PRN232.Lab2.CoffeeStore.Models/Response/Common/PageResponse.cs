@@ -1,6 +1,6 @@
-namespace PRN232.Lab2.CoffeeStore.Models.Request.Common;
+namespace PRN232.Lab2.CoffeeStore.Models.Response.Common;
 
-public class PagedList<T>
+public class PageResponse<T>
 {
     public List<T> Items { get; }
     public int Page { get; }
@@ -9,7 +9,7 @@ public class PagedList<T>
     public bool HasPreviousPage => Page > 1;
     public bool HasNextPage => (Page * PageSize) < TotalCount;
 
-    public PagedList(List<T> items, int totalCount, int page, int pageSize)
+    public PageResponse(List<T> items, int totalCount, int page, int pageSize)
     {
         Items = items;
         TotalCount = totalCount;

@@ -29,8 +29,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerWithJwt();
 
 //DI Mapper
+builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(PageMapping).Assembly); });
 builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(ProductProfile).Assembly); });
 builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(UserProfile).Assembly); });
+builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(CategoryProfile).Assembly); });
 
 // DI Repository
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
@@ -38,9 +40,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
 // DI Service
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 //Authentication & Authorization
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -63,6 +67,3 @@ app.MapControllers();
 
 app.Run();
 
-public interface IUserService
-{
-}

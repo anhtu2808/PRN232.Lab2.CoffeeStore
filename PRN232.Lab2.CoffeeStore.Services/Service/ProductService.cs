@@ -2,6 +2,7 @@ using AutoMapper;
 using PRN232.Lab2.CoffeeStore.Models.Exception;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
 using PRN232.Lab2.CoffeeStore.Models.Request.Product;
+using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Models.Response.Product;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 using PRN232.Lab2.CoffeeStore.Repositories.UnitOfWork;
@@ -20,7 +21,7 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<PagedList<ProductResponse>> GetProductsAsync(ProductFilter filter)
+    public async Task<PageResponse<ProductResponse>> GetProductsAsync(ProductFilter filter)
     {
         var pagedProducts = await _unitOfWork.Products.GetPagedProductsAsync(
             filter,
@@ -30,7 +31,7 @@ public class ProductService : IProductService
 
         var productResponses = _mapper.Map<List<ProductResponse>>(pagedProducts.Items);
 
-        return new PagedList<ProductResponse>(
+        return new PageResponse<ProductResponse>(
             productResponses,
             pagedProducts.TotalCount,
             pagedProducts.Page,
@@ -53,6 +54,7 @@ public class ProductService : IProductService
     public async Task<ProductResponse> CreateProductAsync(CreateProductRequest request)
     {
         var productEntity = _mapper.Map<Product>(request);
+        productEntity.IsActive = true;
 
         await _unitOfWork.Products.AddAsync(productEntity);
 

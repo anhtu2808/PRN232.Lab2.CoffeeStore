@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
 using PRN232.Lab2.CoffeeStore.Models.Request.Product;
+using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 using PRN232.Lab2.CoffeeStore.Repositories.IRepository;
 
@@ -15,7 +16,7 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
         _dbSet = context.Set<Product>();
     }
 
-    public async Task<PagedList<Product>> GetPagedProductsAsync(
+    public async Task<PageResponse<Product>> GetPagedProductsAsync(
         ProductFilter filter,
         Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null,
         string includeProperties = "")
@@ -48,11 +49,11 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
             query = query.Where(p => p.IsActive == filter.IsActive.Value);
         }
 
-        foreach (var includeProperty in includeProperties.Split
-                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-        {
-            query = query.Include(includeProperty);
-        }
+        // foreach (var includeProperty in includeProperties.Split
+        //              (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        // {
+        //     query = query.Include(includeProperty);
+        // }
 
         if (orderBy != null)
         {
@@ -70,7 +71,7 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
             .Take(filter.PageSize)
             .ToListAsync();
 
-        return new PagedList<Product>(items, totalCount, filter.Page, filter.PageSize);
+        return new PageResponse<Product>(items, totalCount, filter.Page, filter.PageSize);
     }
 
     public new Task DeleteAsync(Product entity)

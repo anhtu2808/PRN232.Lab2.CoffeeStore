@@ -8,7 +8,7 @@ namespace PRN232.Lab2.CoffeeStore.API.Controller;
 
 [ApiController]
 [Route("products")]
-[Authorize]
+// [Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;

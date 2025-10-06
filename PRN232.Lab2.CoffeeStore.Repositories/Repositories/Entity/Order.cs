@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PRN232.Lab2.CoffeeStore.Repositories.Entity;
+namespace PRN232.Lab2.CoffeeStore.Repositories.Repositories.Entity;
 
 public partial class Order
 {

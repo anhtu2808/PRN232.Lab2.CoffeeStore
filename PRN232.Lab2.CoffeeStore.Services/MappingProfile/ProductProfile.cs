@@ -1,4 +1,5 @@
 using AutoMapper;
+using PRN232.Lab2.CoffeeStore.Models.Request.Product;
 using PRN232.Lab2.CoffeeStore.Models.Response.Product;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 
@@ -8,6 +9,7 @@ public class ProductProfile : Profile
 {
     public ProductProfile()
     {
+        CreateMap<CreateProductRequest, Product>();
         CreateMap<Product, ProductResponse>()
             .ForMember(
                 dest => dest.CategoryId,

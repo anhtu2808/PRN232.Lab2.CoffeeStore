@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace PRN232.Lab2.CoffeeStore.Repositories.Entity;
+namespace PRN232.Lab2.CoffeeStore.Repositories.Repositories.Entity;
 
 public partial class CoffeeStoreDbContext : DbContext
 {

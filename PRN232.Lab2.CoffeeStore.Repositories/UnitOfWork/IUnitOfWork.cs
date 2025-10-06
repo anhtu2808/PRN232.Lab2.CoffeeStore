@@ -6,5 +6,6 @@ public interface IUnitOfWork : IDisposable
 {
     IProductRepository Products { get; }
     IUserRepository Users { get; }
+    ICategoryRepository Categories { get; }
     Task<int> CompleteAsync();
 }
