@@ -9,6 +9,6 @@ public interface IOrderService
     Task<PageResponse<OrderResponse>> GetAllOrdersAsync(OrderFilter filter);
     Task<OrderResponse?> GetOrderByIdAsync(int id);
     Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request);
-    Task UpdateOrderAsync(int id, UpdateOrderRequest request);
+    Task<OrderResponse> UpdateOrderAsync(int id, UpdateOrderRequest request);
     Task DeleteOrderAsync(int id);
 }

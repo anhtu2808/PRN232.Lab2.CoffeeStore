@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace PRN232.Lab2.CoffeeStore.Repositories.Entity;
 
 public partial class InvalidToken

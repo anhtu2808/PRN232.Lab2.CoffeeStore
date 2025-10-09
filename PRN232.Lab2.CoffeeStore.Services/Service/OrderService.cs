@@ -4,7 +4,6 @@ using PRN232.Lab2.CoffeeStore.Models.Exception;
 using PRN232.Lab2.CoffeeStore.Models.Request.Order;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Models.Response.Order;
-using PRN232.Lab2.CoffeeStore.Models.Response.Product;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 using PRN232.Lab2.CoffeeStore.Repositories.UnitOfWork;
 using PRN232.Lab2.CoffeeStore.Services.IService;
@@ -36,7 +35,14 @@ public class OrderService : IOrderService
 
     public async Task<OrderResponse?> GetOrderByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var order = await _unitOfWork.Orders.GetFirstOrDefaultAsync(o => o.OrderId == id,
+            includeProperties: "OrderDetails");
+        if (order == null)
+        {
+            throw new AppException(ErrorCode.OrderNotFound);
+        }
+
+        return _mapper.Map<OrderResponse>(order);
     }
 
     public async Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request)
@@ -61,13 +67,32 @@ public class OrderService : IOrderService
         return _mapper.Map<OrderResponse>(order);
     }
 
-    public async Task UpdateOrderAsync(int id, UpdateOrderRequest request)
+    public async Task<OrderResponse> UpdateOrderAsync(int id, UpdateOrderRequest request)
     {
-        throw new NotImplementedException();
+        var order = await _unitOfWork.Orders.GetFirstOrDefaultAsync(o => o.OrderId == id);
+        if (order == null)
+        {
+            throw new AppException(ErrorCode.OrderNotFound);
+        }
+
+        if (request.Status != null)
+        {
+            order.Status = request.Status;
+        }
+
+        await _unitOfWork.Orders.UpdateAsync(order);
+        await _unitOfWork.CompleteAsync();
+        return _mapper.Map<OrderResponse>(order);
     }
 
     public async Task DeleteOrderAsync(int id)
     {
-        throw new NotImplementedException();
+        var order = await _unitOfWork.Orders.GetByIdAsync(id);
+        if (order == null)
+        {
+            throw new AppException(ErrorCode.OrderNotFound);
+        }
+        await _unitOfWork.Orders.DeleteAsync(order);
+        await _unitOfWork.CompleteAsync();
     }
 }
