@@ -1,15 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PRN232.Lab2.CoffeeStore.Models.Request.Order;
 
-public record CreateOrderRequest(
-    [Required]
-    string UserId,
+public class CreateOrderRequest
+{
+    [JsonIgnore]
+    public string? UserId { get; set; }
 
     [Required]
-    string PaymentMethod,
+    public string PaymentMethod { get; set; }
 
     [Required]
     [MinLength(1, ErrorMessage = "Order must have at least one item.")]
-    List<OrderItemRequest> OrderItems
-);
+    public List<OrderItemRequest> OrderItems { get; set; } = new List<OrderItemRequest>();
+}

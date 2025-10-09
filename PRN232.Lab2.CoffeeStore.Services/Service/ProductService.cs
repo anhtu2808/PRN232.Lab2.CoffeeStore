@@ -55,6 +55,11 @@ public class ProductService : IProductService
     {
         var productEntity = _mapper.Map<Product>(request);
         productEntity.IsActive = true;
+        var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId);
+        if (category is null)
+        {
+            throw new AppException(ErrorCode.CategoryNotFound);
+        }
 
         await _unitOfWork.Products.AddAsync(productEntity);
 

@@ -12,15 +12,24 @@ public class UnitOfWork : IUnitOfWork
     //  Repository properties
     public IProductRepository Products { get; private set; }
     public IUserRepository Users { get; private set; }
-    
+
     public ICategoryRepository Categories { get; private set; }
 
-    public UnitOfWork(CoffeeStoreDbContext context )
+    public IOrderRepository Orders { get; private set; }
+    
+    public IOrderDetailRepository OrderDetails { get; private set; }
+    
+    public IPaymentRepository Payments { get; private set; }
+
+    public UnitOfWork(CoffeeStoreDbContext context)
     {
         _context = context;
         Categories = new CategoryRepository(_context);
         Products = new ProductRepository(_context);
         Users = new UserRepository(_context);
+        Orders = new OrderRepository(_context);
+        OrderDetails = new OrderDetailRepository(_context);
+        Payments = new PaymentRepository(_context);
     }
 
 
