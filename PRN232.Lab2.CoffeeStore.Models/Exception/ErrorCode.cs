@@ -33,8 +33,11 @@ public class ErrorCode
 
     //401 Unauthenticated
     public static readonly ErrorCode InvalidToken = new(HttpStatusCode.Unauthorized, "Invalid token.");
-    
-    
+
+    //500 Internal Server Error
+    public static readonly ErrorCode FailToGetPaymentUrl =
+        new(HttpStatusCode.InternalServerError, "Failed to get payment URL from ZaloPay.");
+
 
     public static readonly ErrorCode InvalidUsernameOrPassword =
         new(HttpStatusCode.Unauthorized, "Invalid username or password.");

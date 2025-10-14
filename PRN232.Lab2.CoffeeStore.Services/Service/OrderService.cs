@@ -59,6 +59,7 @@ public class OrderService : IOrderService
             }
 
             var orderDetail = _mapper.Map<OrderDetail>(item);
+            orderDetail.UnitPrice = product.Price;
             order.OrderDetails.Add(orderDetail);
         }
 

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PRN232.Lab2.CoffeeStore.API.Configuration;
 using PRN232.Lab2.CoffeeStore.API.middleware;
 using PRN232.Lab2.CoffeeStore.API.Utils;
+using PRN232.Lab2.CoffeeStore.Models.Request.ZaloPay;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 using PRN232.Lab2.CoffeeStore.Repositories.IRepository;
@@ -50,12 +51,15 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
+// DI Zalo Setting
+builder.Services.Configure<ZaloPayConfig>(builder.Configuration.GetSection("ZaloPay"));
 
 // DI Service
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 // DI Utils
 builder.Services.AddScoped<JwtUtils>();

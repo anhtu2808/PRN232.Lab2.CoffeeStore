@@ -15,6 +15,8 @@ public partial class Payment
 
     public string PaymentMethod { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual Order Order { get; set; } = null!;
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();

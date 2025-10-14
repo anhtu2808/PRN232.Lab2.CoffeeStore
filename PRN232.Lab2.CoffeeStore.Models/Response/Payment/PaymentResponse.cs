@@ -4,6 +4,7 @@ public record PaymentResponse(
     int PaymentId,
     int OrderId,
     decimal Amount,
+    string Status,
     DateTime PaymentDate,
     string PaymentMethod
 );
