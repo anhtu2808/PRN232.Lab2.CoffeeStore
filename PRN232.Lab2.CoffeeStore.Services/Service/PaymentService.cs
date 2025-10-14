@@ -34,6 +34,9 @@ public class PaymentService : IPaymentService
         if (order == null)
         {
             throw new AppException(ErrorCode.OrderNotFound);
+        }else if(order.Status != nameof(OrderStatus.Pending))
+        {
+            throw new AppException(ErrorCode.OrderStatusError);
         }
         var totalAmount = order.OrderDetails.Sum(od => od.Quantity * od.UnitPrice);
         var payment = new Payment
@@ -58,7 +61,7 @@ public class PaymentService : IPaymentService
         var description = $"Payment for order #{orderId}";
 
         var hmacInput = $"{_zaloPayConfig.AppId}|{appTransId}|{appUser}|{amount}|{appTime}|{embedData}|{items}";
-        var mac = HmacSHA256(hmacInput, _zaloPayConfig.Key1);
+        var mac = HmacSha256(hmacInput, _zaloPayConfig.Key1);
 
         var payload = new Dictionary<string, object>
         {
@@ -90,7 +93,7 @@ public class PaymentService : IPaymentService
         try
         {
             var key2 = _zaloPayConfig.Key2;
-            string calculatedMac = HmacSHA256(request.Data, key2);
+            string calculatedMac = HmacSha256(request.Data, key2);
 
             if (calculatedMac != request.Mac)
             {
@@ -135,7 +138,7 @@ public class PaymentService : IPaymentService
         }
     }
 
-    private static string HmacSHA256(string data, string key)
+    private static string HmacSha256(string data, string key)
     {
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));

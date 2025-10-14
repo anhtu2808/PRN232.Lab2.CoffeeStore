@@ -20,6 +20,8 @@ public class UnitOfWork : IUnitOfWork
     public IOrderDetailRepository OrderDetails { get; private set; }
     
     public IPaymentRepository Payments { get; private set; }
+    
+    public IRefreshTokenRepository RefreshTokens { get; private set; }
 
     public UnitOfWork(CoffeeStoreDbContext context)
     {
@@ -30,6 +32,7 @@ public class UnitOfWork : IUnitOfWork
         Orders = new OrderRepository(_context);
         OrderDetails = new OrderDetailRepository(_context);
         Payments = new PaymentRepository(_context);
+        RefreshTokens = new RefreshTokenRepository(_context);
     }
 
 

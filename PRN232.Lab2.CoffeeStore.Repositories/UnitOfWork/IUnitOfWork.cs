@@ -10,5 +10,6 @@ public interface IUnitOfWork : IDisposable
     IOrderRepository Orders { get; }
     IOrderDetailRepository OrderDetails { get; }
     IPaymentRepository Payments { get; }
+    IRefreshTokenRepository RefreshTokens { get; }
     Task<int> CompleteAsync();
 }

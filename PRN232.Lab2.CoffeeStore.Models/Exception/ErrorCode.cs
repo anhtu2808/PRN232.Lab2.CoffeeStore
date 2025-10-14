@@ -31,6 +31,9 @@ public class ErrorCode
     public static readonly ErrorCode EmailAlreadyExists =
         new(HttpStatusCode.BadRequest, "Email already exists.");
 
+    public static readonly ErrorCode OrderStatusError =
+        new(HttpStatusCode.BadRequest, "Invalid order status transition.");
+
     //401 Unauthenticated
     public static readonly ErrorCode InvalidToken = new(HttpStatusCode.Unauthorized, "Invalid token.");
 
