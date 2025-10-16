@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PRN232.Lab2.CoffeeStore.Models.Enums;
 using PRN232.Lab2.CoffeeStore.Models.Exception;
 using PRN232.Lab2.CoffeeStore.Models.Request.Auth;
 using PRN232.Lab2.CoffeeStore.Models.Request.User;
@@ -32,39 +33,15 @@ public class AuthService : IAuthService
 
     public async Task<TokenResponse> Login(AuthRequest request)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
         var user = await _unitOfWork.Users.GetFirstOrDefaultAsync(u =>
             u.Username == request.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
             throw new AppException(ErrorCode.InvalidUsernameOrPassword);
         }
-
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"]!)),
-            Issuer = _configuration["Jwt:Issuer"],
-            Audience = _configuration["Jwt:Audience"],
-            SigningCredentials = credentials
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-
         var tokenResponse = new TokenResponse
         {
-            AccessToken = tokenHandler.WriteToken(token),
+            AccessToken = await GenerateAccessToken(user),
             RefreshToken = (await GenerateRefreshToken(user.UserId)).Token
         };
 
@@ -91,6 +68,7 @@ public class AuthService : IAuthService
             Username = request.Username,
             Email = request.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Role = nameof(Role.Customer),
             CreatedDate = DateTime.UtcNow
         };
 
@@ -124,8 +102,14 @@ public class AuthService : IAuthService
 
     public async Task RevokeRefreshToken(string refreshToken)
     {
-        throw new NotImplementedException();
+        var token = await _unitOfWork.RefreshTokens.GetFirstOrDefaultAsync(x => x.Token == refreshToken);
+        if (token != null)
+        {
+            await _unitOfWork.RefreshTokens.DeleteAsync(token);
+            await _unitOfWork.CompleteAsync();
+        }
     }
+
 
     public Task<string> GenerateAccessToken(User user)
     {
@@ -136,7 +120,8 @@ public class AuthService : IAuthService
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
             new Claim(JwtRegisteredClaimNames.Name, user.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

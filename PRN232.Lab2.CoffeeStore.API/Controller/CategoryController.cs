@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.Lab2.CoffeeStore.Models.Request.Category;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
@@ -54,6 +55,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
     {
         var created = await _categoryService.CreateAsync(request);
@@ -67,6 +69,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryRequest request)
     {
         await _categoryService.UpdateAsync(id, request);
@@ -80,6 +83,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         await _categoryService.DeleteAsync(id);

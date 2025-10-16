@@ -1,5 +1,5 @@
+using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
-using PRN232.Lab2.CoffeeStore.Models.Request.Common;
 using PRN232.Lab2.CoffeeStore.Models.Request.Product;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
@@ -17,9 +17,8 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
     }
 
     public async Task<PageResponse<Product>> GetPagedProductsAsync(
-        ProductFilter filter,
-        Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null,
-        string includeProperties = "")
+        ProductFilter filter
+    )
     {
         IQueryable<Product> query = _dbSet;
         if (!string.IsNullOrWhiteSpace(filter.Keyword))
@@ -48,29 +47,27 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
         {
             query = query.Where(p => p.IsActive == filter.IsActive.Value);
         }
-
-        // foreach (var includeProperty in includeProperties.Split
-        //              (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-        // {
-        //     query = query.Include(includeProperty);
-        // }
-
-        if (orderBy != null)
-        {
-            query = orderBy(query);
-        }
-        else
-        {
-            query = query.OrderBy(p => p.ProductId);
-        }
-
+        
+        var isDescending = filter.SortDirection == "desc";
+        query = ApplyOrderByPropertyName(query, filter.Sort, isDescending);
         var totalCount = await query.CountAsync();
+        
+        var page = filter.Page > 0 ? filter.Page : 1;
+        var pageSize = filter.PageSize > 0 ? filter.PageSize : 10;
+    
+        query = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+        //  Field selection
+        if (filter.IncludeProperties.Any())
+        {
+            var selectString = "new (" + string.Join(",", filter.IncludeProperties) + ")";
+            var projected = await query.Select(selectString).ToDynamicListAsync();
+            return new PageResponse<Product>(projected, totalCount, filter.Page, filter.PageSize);
+        }
 
-        var items = await query
-            .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize)
-            .ToListAsync();
-
+        // Default full entity
+        var items = await query.ToListAsync();
         return new PageResponse<Product>(items, totalCount, filter.Page, filter.PageSize);
     }
 

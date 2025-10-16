@@ -24,10 +24,21 @@ CREATE TABLE Users (
                        Username NVARCHAR(100) NOT NULL UNIQUE,
                        Email NVARCHAR(255) NOT NULL UNIQUE,
                        PasswordHash NVARCHAR(MAX) NOT NULL, -- In a real app, ALWAYS store a hashed password
+                       Role NVARCHAR(50) NOT NULL DEFAULT 'Customer', -- e.g., Customer, Admin
                        CreatedDate DATETIME2 NOT NULL DEFAULT GETDATE()
+
 );
 GO
-
+-- Create Refresh Token
+CREATE TABLE RefreshTokens (
+                               Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+                               UserId UNIQUEIDENTIFIER NOT NULL,
+                               Token NVARCHAR(500) NOT NULL,
+                               ExpiresAt DATETIME NOT NULL,
+                               CreatedAt DATETIME DEFAULT GETDATE(),
+                               FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+GO
 -- Create InvalidTokens Table (NEW)
 CREATE TABLE InvalidTokens (
                                TokenId INT IDENTITY(1,1) PRIMARY KEY,
@@ -79,6 +90,7 @@ CREATE TABLE Payments (
                           PaymentId INT IDENTITY(1,1) PRIMARY KEY,
                           OrderId INT NOT NULL,
                           Amount DECIMAL(18,2) NOT NULL,
+                          Status NVARCHAR(20) NOT NULL DEFAULT 'PENDING',
                           PaymentDate DATETIME2 NOT NULL DEFAULT GETDATE(),
                           PaymentMethod NVARCHAR(50) NOT NULL,
                           CONSTRAINT FK_Payments_Orders FOREIGN KEY (OrderId)
@@ -210,6 +222,7 @@ GO
 
 PRINT 'Database CoffeeStoreDB2 created and seeded successfully.';
 GO
+
 
 
 

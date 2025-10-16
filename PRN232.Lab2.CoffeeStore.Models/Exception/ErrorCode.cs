@@ -26,10 +26,10 @@ public class ErrorCode
         new(HttpStatusCode.BadRequest, "Product is already inactive.");
 
     public static readonly ErrorCode UsernameAlreadyExists =
-        new(HttpStatusCode.BadRequest, "Username already exists.");
+        new(HttpStatusCode.Conflict, "Username already exists.");
 
     public static readonly ErrorCode EmailAlreadyExists =
-        new(HttpStatusCode.BadRequest, "Email already exists.");
+        new(HttpStatusCode.Conflict, "Email already exists.");
 
     public static readonly ErrorCode OrderStatusError =
         new(HttpStatusCode.BadRequest, "Invalid order status transition.");

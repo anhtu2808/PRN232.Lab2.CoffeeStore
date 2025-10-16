@@ -1,0 +1,71 @@
+testcase_id,testcase_name,endpoint,method,username,password,page,pageSize,sort,sortDirection,keyword,categoryId,minPrice,maxPrice,isActive,productId,orderId,status,expectedStatus,description
+TC01,Login-Success,/auth/login,POST,admin,admin,,,,,,,,,,,,,200,Login with valid credentials
+TC02,Login-Invalid-Username,/auth/login,POST,invaliduser,Admin@123,,,,,,,,,,,,,401,Login with non-existent username
+TC03,Login-Invalid-Password,/auth/login,POST,admin,wrongpass,,,,,,,,,,,,,401,Login with incorrect password
+TC04,Login-Missing-Username,/auth/login,POST,,Admin@123,,,,,,,,,,,,,400,Login without username
+TC05,Login-Missing-Password,/auth/login,POST,admin,,,,,,,,,,,,,,400,Login without password
+TC06,Login-Empty-Body,/auth/login,POST,,,,,,,,,,,,,,,400,Login with empty request body
+TC07,Register-Success,/auth/register,POST,newuser01,NewPass@123,,,,,,,,,,,,,200,Register with valid data
+TC08,Register-Duplicate,/auth/register,POST,admin,Admin@123,,,,,,,,,,,,,400,Register with existing username
+TC09,Register-Invalid-Email,/auth/register,POST,user02,Pass@123,,,,,,,,,,,,,400,Register with invalid email format
+TC10,Register-Short-Password,/auth/register,POST,user03,123,,,,,,,,,,,,,400,Register with password less than 5 chars
+TC11,Register-Short-Username,/auth/register,POST,ab,Pass@123,,,,,,,,,,,,,400,Register with username less than 3 chars
+TC12,Refresh-Token-Success,/auth/refresh,POST,,,,,,,,,,,,,,,,200,Refresh token with valid refresh token
+TC13,Refresh-Invalid-Token,/auth/refresh,POST,,,,,,,,,,,,,,,,401,Refresh with invalid token
+TC14,Refresh-Expired-Token,/auth/refresh,POST,,,,,,,,,,,,,,,,401,Refresh with expired token
+TC15,Refresh-Empty-Body,/auth/refresh,POST,,,,,,,,,,,,,,,,400,Refresh with empty body
+TC16,Categories-Get-All,/categories,GET,,,1,10,,,,,,,,,,,200,Get all categories with default paging
+TC17,Categories-Paging-Page1,/categories,GET,,,1,5,,,,,,,,,,,200,Get categories page 1 with 5 items
+TC18,Categories-Sort-Asc,/categories,GET,,,1,10,name,asc,,,,,,,,200,Get categories sorted by name ascending
+TC19,Categories-Search-Keyword,/categories,GET,,,1,10,,,Coffee,,,,,,,200,Search categories with keyword Coffee
+TC20,Categories-Paging-OutOfBound,/categories,GET,,,999,10,,,,,,,,,,,200,Get categories with page number 999
+TC21,Categories-Create-Success,/categories,POST,admin,Admin@123,,,,,,,,,,,,,201,Create new category with valid data
+TC22,Categories-Create-No-Auth,/categories,POST,,,,,,,,,,,,,,,401,Create category without authentication
+TC23,Categories-Create-Invalid-Data,/categories,POST,admin,Admin@123,,,,,,,,,,,,,400,Create category with missing required fields
+TC24,Categories-Get-By-Id,/categories/{id},GET,,,,,,,,,,,,,,,200,Get category by valid ID
+TC25,Categories-Get-Invalid-Id,/categories/{id},GET,,,,,,,,,,,,,,,404,Get category with non-existent ID
+TC26,Categories-Update-Success,/categories/{id},PUT,admin,Admin@123,,,,,,,,,,,,,200,Update category with valid data
+TC27,Categories-Delete-Success,/categories/{id},DELETE,admin,Admin@123,,,,,,,,,,,,,200,Delete category successfully
+TC28,Products-Get-All,/products,GET,,,1,10,,,,,,,,,,,200,Get all products with default paging
+TC29,Products-Paging-Page2,/products,GET,,,2,10,,,,,,,,,,,200,Get products page 2 with 10 items
+TC30,Products-Filter-Category,/products,GET,,,1,10,,,,1,,,,,,200,Filter products by categoryId
+TC31,Products-Filter-Price-Range,/products,GET,,,1,10,,,,,10,50,,,,,200,Filter products by price range 10-50
+TC32,Products-Filter-Active,/products,GET,,,1,10,,,,,,true,,,,,200,Filter only active products
+TC33,Products-Sort-Price-Desc,/products,GET,,,1,10,price,desc,,,,,,,,200,Sort products by price descending
+TC34,Products-Field-Selection,/products,GET,,,1,10,,,,,,,,,,,200,Get products with specific fields only
+TC35,Products-Create-Success,/products,POST,admin,Admin@123,,,,,,,,,,,,,201,Create product with valid data
+TC36,Products-Create-No-Auth,/products,POST,,,,,,,,,,,,,,,401,Create product without token
+TC37,Products-Create-Negative-Price,/products,POST,admin,Admin@123,,,,,,,,,,,,,400,Create product with negative price
+TC38,Products-Get-By-Id,/products/{id},GET,,,,,,,,,,,,,,,200,Get product by valid ID
+TC39,Products-Get-Invalid-Id,/products/{id},GET,,,,,,,,,,,,,,,404,Get product with non-existent ID
+TC40,Products-Update-Success,/products/{id},PUT,admin,Admin@123,,,,,,,,,,,,,200,Update product successfully
+TC41,Products-Delete-Success,/products/{id},DELETE,admin,Admin@123,,,,,,,,,,,,,200,Delete product successfully
+TC42,Orders-Get-All,/orders,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Get all orders with authentication
+TC43,Orders-Paging-Page1,/orders,GET,admin,Admin@123,1,5,,,,,,,,,,,200,Get orders page 1 with 5 items
+TC44,Orders-Filter-UserId,/orders,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Filter orders by userId
+TC45,Orders-Filter-Status,/orders,GET,admin,Admin@123,1,10,,,,,,,pending,,,200,Filter orders by status
+TC46,Orders-Filter-DateRange,/orders,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Filter orders by date range
+TC47,Orders-Sort-Date-Desc,/orders,GET,admin,Admin@123,1,10,createdDate,desc,,,,,,,,200,Sort orders by creation date desc
+TC48,Orders-Create-Success,/orders,POST,admin,Admin@123,,,,,,,,,,,,,201,Create order with valid data
+TC49,Orders-Create-No-Auth,/orders,POST,,,,,,,,,,,,,,,401,Create order without authentication
+TC50,Orders-Create-Empty-Items,/orders,POST,admin,Admin@123,,,,,,,,,,,,,400,Create order with empty orderItems array
+TC51,Orders-Create-Missing-Payment,/orders,POST,admin,Admin@123,,,,,,,,,,,,,400,Create order without paymentMethod
+TC52,Orders-Get-By-Id,/orders/{id},GET,admin,Admin@123,,,,,,,,,,1,,,200,Get order by valid ID
+TC53,Orders-Get-Invalid-Id,/orders/{id},GET,admin,Admin@123,,,,,,,,,,999999,,,404,Get order with non-existent ID
+TC54,Orders-Update-Status,/orders/{id},PUT,admin,Admin@123,,,,,,,,,,1,,,200,Update order status
+TC55,Orders-Delete-Success,/orders/{id},DELETE,admin,Admin@123,,,,,,,,,,1,,,200,Delete order successfully
+TC56,Payment-Create-Success,/payments/{orderId}/create,POST,admin,Admin@123,,,,,,,,,,1,,,200,Create payment for valid order
+TC57,Payment-Create-Invalid-Order,/payments/{orderId}/create,POST,admin,Admin@123,,,,,,,,,,999999,,,404,Create payment for non-existent order
+TC58,Payment-Callback-Success,/payments/callback,POST,,,,,,,,,,,,,,,,200,Process payment callback with valid data
+TC59,Payment-Callback-Invalid-Mac,/payments/callback,POST,,,,,,,,,,,,,,,,400,Process callback with invalid MAC
+TC60,Users-Get-All,/users,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Get all users with authentication
+TC61,Users-Get-No-Auth,/users,GET,,,1,10,,,,,,,,,,,401,Get users without authentication
+TC62,Users-Paging-Page1,/users,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Get users page 1 with 10 items
+TC63,Users-Filter-Email,/users,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Filter users by email
+TC64,Users-Filter-DateRange,/users,GET,admin,Admin@123,1,10,,,,,,,,,,,200,Filter users by creation date range
+TC65,Users-Create-Success,/users,POST,admin,Admin@123,,,,,,,,,,,,,201,Create user with admin token
+TC66,Users-Create-No-Auth,/users,POST,,,,,,,,,,,,,,,401,Create user without authentication
+TC67,Users-Get-By-Id,/users/{id},GET,admin,Admin@123,,,,,,,,,,,,,200,Get user by valid UUID
+TC68,Users-Get-Invalid-Id,/users/{id},GET,admin,Admin@123,,,,,,,,,,,,,404,Get user with non-existent UUID
+TC69,Users-Update-Success,/users/{id},PUT,admin,Admin@123,,,,,,,,,,,,,200,Update user successfully
+TC70,Users-Delete-Success,/users/{id},DELETE,admin,Admin@123,,,,,,,,,,,,,200,Delete user successfully

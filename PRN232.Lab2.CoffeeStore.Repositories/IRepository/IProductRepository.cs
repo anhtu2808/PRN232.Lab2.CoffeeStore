@@ -8,7 +8,6 @@ namespace PRN232.Lab2.CoffeeStore.Repositories.IRepository;
 public interface IProductRepository : IGenericRepository<Product, int>
 {
     public Task<PageResponse<Product>> GetPagedProductsAsync(
-        ProductFilter filter,
-        Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null,
-        string includeProperties = "");
+        ProductFilter filter
+        );
 }

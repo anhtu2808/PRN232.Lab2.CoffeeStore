@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.Lab2.CoffeeStore.API.Utils;
 using PRN232.Lab2.CoffeeStore.Models.Request.Order;
@@ -8,11 +9,12 @@ using PRN232.Lab2.CoffeeStore.Services.IService;
 namespace PRN232.Lab2.CoffeeStore.API.Controller;
 
 [ApiController]
+[Authorize]
 [Route("orders")]
 public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
-    private readonly JwtUtils _jwtUtils ;
+    private readonly JwtUtils _jwtUtils;
 
     public OrderController(IOrderService orderService, JwtUtils jwtUtils)
     {
@@ -86,6 +88,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteOrder(int id)
     {
         await _orderService.DeleteOrderAsync(id);

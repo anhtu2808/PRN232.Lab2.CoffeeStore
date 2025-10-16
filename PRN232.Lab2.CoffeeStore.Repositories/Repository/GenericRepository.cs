@@ -1,5 +1,6 @@
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
@@ -139,12 +140,23 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
 
         // Pagination
         var totalCount = await query.CountAsync();
+        
+        var page = parameters.Page > 0 ? parameters.Page : 1;
+        var pageSize = parameters.PageSize > 0 ? parameters.PageSize : 10;
+    
+        query = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
 
-        var items = await query
-            .Skip((parameters.Page - 1) * parameters.PageSize)
-            .Take(parameters.PageSize)
-            .ToListAsync();
-
+        //  Field selection
+        if (parameters.IncludeProperties.Any())
+        {
+            var selectString = "new (" + string.Join(",", parameters.IncludeProperties) + ")";
+            var projected = await query.Select(selectString).ToDynamicListAsync();
+            return new PageResponse<T>(projected, totalCount, parameters.Page, parameters.PageSize);
+        }
+        // Default full entity
+        var items = await query.ToListAsync();
         return new PageResponse<T>(items, totalCount, parameters.Page, parameters.PageSize);
     }
 
@@ -166,5 +178,35 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : 
 
         // Áp dụng bộ lọc và trả về phần tử đầu tiên hoặc null
         return await query.FirstOrDefaultAsync(filter);
+    }
+
+    protected IQueryable<T> ApplyOrderByPropertyName<T>(
+        IQueryable<T> source,
+        string? propertyName,
+        bool isDescending = false)
+    {
+        if (string.IsNullOrEmpty(propertyName))
+            return source;
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        var property = typeof(T).GetProperty(propertyName,
+            BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+        if (property == null)
+            return source;
+
+        var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+        var orderByExp = Expression.Lambda(propertyAccess, parameter);
+
+        string methodName = isDescending ? "OrderByDescending" : "OrderBy";
+
+        var resultExp = Expression.Call(
+            typeof(Queryable),
+            methodName,
+            new Type[] { typeof(T), property.PropertyType },
+            source.Expression,
+            Expression.Quote(orderByExp));
+
+        return source.Provider.CreateQuery<T>(resultExp);
     }
 }

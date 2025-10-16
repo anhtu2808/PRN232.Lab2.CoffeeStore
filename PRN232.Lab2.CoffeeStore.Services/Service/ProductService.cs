@@ -24,9 +24,7 @@ public class ProductService : IProductService
     public async Task<PageResponse<ProductResponse>> GetProductsAsync(ProductFilter filter)
     {
         var pagedProducts = await _unitOfWork.Products.GetPagedProductsAsync(
-            filter,
-            includeProperties: "Category",
-            orderBy: q => q.OrderBy(p => p.ProductId)
+            filter
         );
 
         var productResponses = _mapper.Map<List<ProductResponse>>(pagedProducts.Items);

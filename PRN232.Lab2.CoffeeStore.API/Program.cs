@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PRN232.Lab2.CoffeeStore.API;
 using PRN232.Lab2.CoffeeStore.API.Configuration;
 using PRN232.Lab2.CoffeeStore.API.middleware;
 using PRN232.Lab2.CoffeeStore.API.Utils;
@@ -21,10 +22,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddHttpContextAccessor();
 
-// Cấu hình DbContext với SQL Server
-builder.Services.AddDbContext<CoffeeStoreDbContext>(options =>
-    options.UseSqlServer(connectionString));
+//Cấu hình in memory DB
+var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryDatabase");
 
+
+// Cấu hình DbContext
+builder.Services.AddDbContext<CoffeeStoreDbContext>(options =>
+{
+    if (useInMemory)
+        options.UseInMemoryDatabase("CoffeeStoreTestDB");
+    else
+        options.UseSqlServer(connectionString);
+});
 
 // Custom validate request model
 builder.Services.AddCustomApiBehavior();
@@ -50,6 +59,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 // DI Zalo Setting
 builder.Services.Configure<ZaloPayConfig>(builder.Configuration.GetSection("ZaloPay"));
@@ -60,6 +71,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // DI Utils
 builder.Services.AddScoped<JwtUtils>();
@@ -69,6 +81,9 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+await AppInitializer.SeedAdministratorAsync(app);
+
 
 // Cấu hình pipeline cho HTTP request
 if (app.Environment.IsDevelopment())
