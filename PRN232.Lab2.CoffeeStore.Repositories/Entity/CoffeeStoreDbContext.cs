@@ -30,12 +30,16 @@ public partial class CoffeeStoreDbContext : DbContext
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost,1433;Database=CoffeeStoreDB2;User Id=sa;Password=YourStr0ng!Pass;TrustServerCertificate=True;Encrypt=False;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B4A79F566");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B8F12A069");
 
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Description).HasMaxLength(500);
@@ -44,14 +48,14 @@ public partial class CoffeeStoreDbContext : DbContext
 
         modelBuilder.Entity<InvalidToken>(entity =>
         {
-            entity.HasKey(e => e.TokenId).HasName("PK__InvalidT__658FEEEA5247459B");
+            entity.HasKey(e => e.TokenId).HasName("PK__InvalidT__658FEEEA8A9AD155");
 
             entity.Property(e => e.InvalidatedDate).HasDefaultValueSql("(getdate())");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF25C1131B");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFB3CC3073");
 
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Status).HasMaxLength(50);
@@ -67,7 +71,7 @@ public partial class CoffeeStoreDbContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C3128BC80");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36CF327279B");
 
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
 
@@ -83,7 +87,7 @@ public partial class CoffeeStoreDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A3833DD79B3");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A380EA219E7");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
@@ -99,7 +103,7 @@ public partial class CoffeeStoreDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD90FFA966");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CDD69D2855");
 
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.Name).HasMaxLength(200);
@@ -113,7 +117,7 @@ public partial class CoffeeStoreDbContext : DbContext
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC0739A389EF");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC077ED0F26A");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt)
@@ -125,16 +129,16 @@ public partial class CoffeeStoreDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RefreshTo__UserI__05D8E0BE");
+                .HasConstraintName("FK__RefreshTo__UserI__5441852A");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CE054835B");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C52AFF386");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E48187C7EA").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E45DB33007").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D105345AD795ED").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D105347D950D83").IsUnique();
 
             entity.Property(e => e.UserId).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");

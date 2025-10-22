@@ -13,9 +13,9 @@ public partial class User
 
     public string PasswordHash { get; set; } = null!;
 
-    public DateTime CreatedDate { get; set; }
-
     public string Role { get; set; } = null!;
+
+    public DateTime CreatedDate { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 

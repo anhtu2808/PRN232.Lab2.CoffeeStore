@@ -1,134 +1,119 @@
--- Drop the database if it already exists to start clean
-IF
-DB_ID('CoffeeStoreDB2') IS NOT NULL
+-- Drop database if exists
+IF DB_ID('CoffeeStoreDB2') IS NOT NULL
 BEGIN
-        ALTER
-DATABASE CoffeeStoreDB2 SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-        DROP
-DATABASE CoffeeStoreDB2;
+        ALTER DATABASE CoffeeStoreDB2 SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+        DROP DATABASE CoffeeStoreDB2;
 END
 GO
 
--- Create the new database
-CREATE
-DATABASE CoffeeStoreDB2;
+-- Create database
+CREATE DATABASE CoffeeStoreDB2;
 GO
-
--- Switch to the newly created database
 USE CoffeeStoreDB2;
 GO
 
 --------------------------------------------------
--- SECTION 1: TABLE CREATION
+-- SECTION 1: TABLE CREATION (parent tables BEFORE child tables)
 --------------------------------------------------
 
--- Create Users Table (NEW)
+-- 1. Users Table
 CREATE TABLE Users
 (
-    UserId       UNIQUEIDENTIFIER PRIMARY KEY,
+    UserId       UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     Username     NVARCHAR(100) NOT NULL UNIQUE,
     Email        NVARCHAR(255) NOT NULL UNIQUE,
-    PasswordHash NVARCHAR(MAX) NOT NULL,                   -- In a real app, ALWAYS store a hashed password
-    Role         NVARCHAR(50) NOT NULL DEFAULT 'Customer', -- e.g., Customer, Admin
+    PasswordHash NVARCHAR(MAX) NOT NULL,
+    Role         NVARCHAR(50) NOT NULL DEFAULT 'Customer',
     CreatedDate  DATETIME2 NOT NULL DEFAULT GETDATE()
-
-);
-GO
--- Create Refresh Token
-CREATE TABLE RefreshTokens
-(
-    Id        UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    Token     NVARCHAR(500) NOT NULL,
-    ExpiresAt DATETIME         NOT NULL,
-    CreatedAt DATETIME                     DEFAULT GETDATE(),
-    FOREIGN KEY (UserId) REFERENCES Users (UserId)
-);
-GO
--- Create InvalidTokens Table (NEW)
-CREATE TABLE InvalidTokens
-(
-    TokenId         INT IDENTITY(1,1) PRIMARY KEY,
-    TokenValue      NVARCHAR(MAX) NOT NULL,
-    InvalidatedDate DATETIME2 NOT NULL DEFAULT GETDATE()
 );
 GO
 
--- Create Categories Table
+-- 2. Categories Table
 CREATE TABLE Categories
 (
-    CategoryId  INT IDENTITY(1,1) PRIMARY KEY,
-    Name        NVARCHAR(100) NOT NULL,
+    CategoryId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
     Description NVARCHAR(500),
     CreatedDate DATETIME2 NOT NULL DEFAULT GETDATE()
 );
 GO
 
--- Create Products Table
+-- 3. Products Table
 CREATE TABLE Products
 (
-    ProductId   INT IDENTITY(1,1) PRIMARY KEY,
-    Name        NVARCHAR(200) NOT NULL,
+    ProductId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
     Description NVARCHAR(MAX),
-    Price       DECIMAL(18, 2) NOT NULL,
-    CategoryId  INT NULL,
-    IsActive    BIT            NOT NULL DEFAULT 1,
-    CONSTRAINT FK_Products_Categories
-        FOREIGN KEY (CategoryId)
-            REFERENCES Categories (CategoryId)
-            ON DELETE SET NULL
+    Price DECIMAL(18,2) NOT NULL,
+    CategoryId INT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryId)
+        REFERENCES Categories(CategoryId)
+        ON DELETE SET NULL
 );
 GO
 
--- Create Orders Table (MODIFIED)
--- UserId is now an INT and references the Users table.
+-- 4. Orders Table (UserId đồng bộ kiểu UNIQUEIDENTIFIER)
 CREATE TABLE Orders
 (
-    OrderId   INT IDENTITY(1,1) PRIMARY KEY,
-    UserId    INT       NOT NULL,
+    OrderId INT IDENTITY(1,1) PRIMARY KEY,
+    UserId UNIQUEIDENTIFIER NOT NULL,
     OrderDate DATETIME2 NOT NULL DEFAULT GETDATE(),
-    Status    NVARCHAR(50) NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
     PaymentId INT NULL,
     CONSTRAINT FK_Orders_Users FOREIGN KEY (UserId)
-        REFERENCES Users (UserId)
-        ON DELETE CASCADE -- 🔸 Khi xóa User thì xóa luôn Orders của họ
+        REFERENCES Users(UserId)
+        ON DELETE CASCADE
 );
 GO
 
--- Create Payments Table
+-- 5. Payments Table
 CREATE TABLE Payments
 (
-    PaymentId     INT IDENTITY(1,1) PRIMARY KEY,
-    OrderId       INT            NOT NULL,
-    Amount        DECIMAL(18, 2) NOT NULL,
-    Status        NVARCHAR(20) NOT NULL DEFAULT 'PENDING',
-    PaymentDate   DATETIME2      NOT NULL DEFAULT GETDATE(),
+    PaymentId INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId INT NOT NULL,
+    Amount DECIMAL(18,2) NOT NULL,
+    Status NVARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    PaymentDate DATETIME2 NOT NULL DEFAULT GETDATE(),
     PaymentMethod NVARCHAR(50) NOT NULL,
     CONSTRAINT FK_Payments_Orders FOREIGN KEY (OrderId)
-        REFERENCES Orders (OrderId)
-        ON DELETE CASCADE -- 🔸 Khi xóa Order thì xóa luôn Payment
+        REFERENCES Orders(OrderId)
+        ON DELETE CASCADE
 );
 GO
 
--- Now, add the foreign key constraint from Orders to Payments
+-- Add FK PaymentId to Orders after Payments table exists
 ALTER TABLE Orders
-    ADD CONSTRAINT FK_Orders_Payments FOREIGN KEY (PaymentId) REFERENCES Payments (PaymentId);
+    ADD CONSTRAINT FK_Orders_Payments FOREIGN KEY (PaymentId)
+        REFERENCES Payments(PaymentId);
 GO
 
--- Create OrderDetails Table
+-- 6. OrderDetails Table
 CREATE TABLE OrderDetails
 (
     OrderDetailId INT IDENTITY(1,1) PRIMARY KEY,
-    OrderId       INT            NOT NULL,
-    ProductId     INT            NOT NULL,
-    Quantity      INT            NOT NULL,
-    UnitPrice     DECIMAL(18, 2) NOT NULL,
+    OrderId INT NOT NULL,
+    ProductId INT NOT NULL,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(18,2) NOT NULL,
     CONSTRAINT FK_OrderDetails_Orders FOREIGN KEY (OrderId)
-        REFERENCES Orders (OrderId)
-        ON DELETE CASCADE,  -- 🔸 Khi xóa Order thì xóa luôn các OrderDetail
+        REFERENCES Orders(OrderId)
+        ON DELETE CASCADE,
     CONSTRAINT FK_OrderDetails_Products FOREIGN KEY (ProductId)
-        REFERENCES Products (ProductId)
-        ON DELETE NO ACTION -- Giữ sản phẩm, không xóa theo
+        REFERENCES Products(ProductId)
+        ON DELETE NO ACTION
+);
+GO
+
+-- 7. RefreshTokens Table
+CREATE TABLE RefreshTokens
+(
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    Token NVARCHAR(500) NOT NULL,
+    ExpiresAt DATETIME NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 GO
 
