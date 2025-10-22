@@ -79,11 +79,12 @@ public class OrderController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderRequest request)
     {
-        await _orderService.UpdateOrderAsync(id, request);
+       var order =  await _orderService.UpdateOrderAsync(id, request);
         return Ok(new ApiResponse<object>
         {
             StatusCode = 200,
-            Message = "Order updated successfully."
+            Message = "Order updated successfully.",
+            Data = order
         });
     }
 

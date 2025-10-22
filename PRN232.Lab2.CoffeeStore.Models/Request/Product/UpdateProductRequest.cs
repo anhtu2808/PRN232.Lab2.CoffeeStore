@@ -14,7 +14,7 @@ public record UpdateProductRequest(
     decimal Price,
 
     [Required]
-    int CategoryId,
+    int? CategoryId,
     
     bool IsActive
 );

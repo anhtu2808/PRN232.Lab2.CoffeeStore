@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.Lab2.CoffeeStore.Models.Request.Category;
 using PRN232.Lab2.CoffeeStore.Models.Request.Common;
+using PRN232.Lab2.CoffeeStore.Models.Response.Category;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Services.IService;
 
@@ -22,7 +23,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] RequestParameters parameters)
     {
         var result = await _categoryService.GetAllAsync(parameters);
-        var response = new ApiResponse<object>
+        var response = new ApiResponse<PageResponse<CategoryResponse>>
         {
             StatusCode = 200,
             Message = "Categories retrieved successfully.",
@@ -72,12 +73,12 @@ public class CategoryController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryRequest request)
     {
-        await _categoryService.UpdateAsync(id, request);
+       var category = await _categoryService.UpdateAsync(id, request);
         var response = new ApiResponse<object>
         {
             StatusCode = 200,
             Message = "Category updated successfully.",
-            Data = null
+            Data = category
         };
         return Ok(response);
     }

@@ -62,12 +62,12 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest request)
     {
-        await _productService.UpdateProductAsync(id, request);
+       var product =  await _productService.UpdateProductAsync(id, request);
         return Ok(new ApiResponse<object>
         {
             StatusCode = 200,
             Message = "Product updated successfully.",
-            Data = null
+            Data = product
         });
     }
 

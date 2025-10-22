@@ -66,9 +66,18 @@ public class ProductService : IProductService
         return _mapper.Map<ProductResponse>(productEntity);
     }
 
-    public async Task UpdateProductAsync(int id, UpdateProductRequest request)
+    public async Task<ProductResponse> UpdateProductAsync(int id, UpdateProductRequest request)
     {
         var existingProduct = await _unitOfWork.Products.GetByIdAsync(id);
+        if (request.CategoryId != null)
+        {
+            var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId.Value);
+            if (category is null)
+            {
+                throw new AppException(ErrorCode.CategoryNotFound);
+            }
+        }
+       
         if (existingProduct is null)
         {
             throw new AppException(ErrorCode.ProductNotFound);
@@ -78,6 +87,7 @@ public class ProductService : IProductService
 
         await _unitOfWork.Products.UpdateAsync(existingProduct);
         await _unitOfWork.CompleteAsync();
+        return _mapper.Map<ProductResponse>(existingProduct);
     }
 
     public async Task DeleteProductAsync(int id)

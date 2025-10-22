@@ -20,7 +20,7 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
         ProductFilter filter
     )
     {
-        IQueryable<Product> query = _dbSet;
+        IQueryable<Product> query = _dbSet.Include(p => p.Category);
         if (!string.IsNullOrWhiteSpace(filter.Keyword))
         {
             var searchTerm = filter.Keyword.Trim().ToLower();
@@ -47,14 +47,14 @@ public class ProductRepository : GenericRepository<Product, int>, IProductReposi
         {
             query = query.Where(p => p.IsActive == filter.IsActive.Value);
         }
-        
+
         var isDescending = filter.SortDirection == "desc";
         query = ApplyOrderByPropertyName(query, filter.Sort, isDescending);
         var totalCount = await query.CountAsync();
-        
+
         var page = filter.Page > 0 ? filter.Page : 1;
         var pageSize = filter.PageSize > 0 ? filter.PageSize : 10;
-    
+
         query = query
             .Skip((page - 1) * pageSize)
             .Take(pageSize);

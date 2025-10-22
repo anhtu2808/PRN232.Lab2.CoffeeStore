@@ -10,14 +10,16 @@ public class ProductProfile : Profile
     public ProductProfile()
     {
         CreateMap<CreateProductRequest, Product>();
+        CreateMap<UpdateProductRequest, Product>()
+            .ForMember(dest => dest.ProductId, opt => opt.Ignore()); 
         CreateMap<Product, ProductResponse>()
             .ForMember(
                 dest => dest.CategoryId,
-                opt => opt.MapFrom(src => src.Category.CategoryId) 
+                opt => opt.MapFrom(src => src.Category!.CategoryId) 
             )
             .ForMember(
                 dest => dest.CategoryName,
-                opt => opt.MapFrom(src => src.Category.Name) 
+                opt => opt.MapFrom(src => src.Category!.Name) 
             );
     }
 }

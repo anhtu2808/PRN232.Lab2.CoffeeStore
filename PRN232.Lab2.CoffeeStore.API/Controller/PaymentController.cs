@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.Lab2.CoffeeStore.Models.Request.ZaloPay;
 using PRN232.Lab2.CoffeeStore.Services.IService;
@@ -18,8 +19,9 @@ public class PaymentController : ControllerBase
     }
 
 
-    [HttpPost("{orderId}/create")]
-    public async Task<IActionResult> CreatePaymentUrl([FromRoute] int orderId)
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetPaymentUrl([FromQuery] int orderId)
     {
         var url = await _paymentService.GetPaymentUrlAsync(orderId);
         return Ok(new

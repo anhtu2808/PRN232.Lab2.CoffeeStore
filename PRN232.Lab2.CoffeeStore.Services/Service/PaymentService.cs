@@ -44,6 +44,7 @@ public class PaymentService : IPaymentService
             OrderId = orderId,
             Amount = totalAmount,
             PaymentMethod = "ZaloPay",
+            Status = "PENDING",
             PaymentDate = DateTime.Now
         };
         await _unitOfWork.Payments.AddAsync(payment);

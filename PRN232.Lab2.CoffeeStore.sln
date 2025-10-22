@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.API", "PRN232.Lab2.CoffeeStore.API\PRN232.Lab2.CoffeeStore.API.csproj", "{1476A15E-5327-4BC3-8949-60C09451780C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Services", "PRN232.Lab2.CoffeeStore.Services\PRN232.Lab2.CoffeeStore.Services.csproj", "{93160DBB-8959-4A42-9881-67063E467A9A}"
@@ -7,6 +8,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Repositories", "PRN232.Lab2.CoffeeStore.Repositories\PRN232.Lab2.CoffeeStore.Repositories.csproj", "{B953581D-63CD-4939-9128-AD2DC568CB5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232.Lab2.CoffeeStore.Models", "PRN232.Lab2.CoffeeStore.Models\PRN232.Lab2.CoffeeStore.Models.csproj", "{49D5BC4A-7571-4035-9BD5-110E69903102}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeStore.Tests", "CoffeeStore.Tests\CoffeeStore.Tests.csproj", "{E58D2F42-223A-4E30-804B-DE6EDF7A1B4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +33,9 @@ Global
 		{49D5BC4A-7571-4035-9BD5-110E69903102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49D5BC4A-7571-4035-9BD5-110E69903102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49D5BC4A-7571-4035-9BD5-110E69903102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58D2F42-223A-4E30-804B-DE6EDF7A1B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58D2F42-223A-4E30-804B-DE6EDF7A1B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58D2F42-223A-4E30-804B-DE6EDF7A1B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58D2F42-223A-4E30-804B-DE6EDF7A1B4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

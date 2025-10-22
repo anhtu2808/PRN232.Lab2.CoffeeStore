@@ -1,12 +1,22 @@
-namespace PRN232.Lab2.CoffeeStore.Models.Response.User;
+using System.Text.Json.Serialization;
 
-public class UserResponse
+namespace PRN232.Lab2.CoffeeStore.Models.Response.User
 {
-    public Guid UserId { get; set; }
+    public class UserResponse
+    {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Guid? UserId { get; set; }
 
-    public string Username { get; set; } = null!;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Username { get; set; }
 
-    public string Email { get; set; } = null!;
-    public DateTime? CreatedDate { get; set; }
-    public string Role { get; set; } = null!;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Email { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DateTime? CreatedDate { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Role { get; set; }
+    }
 }
