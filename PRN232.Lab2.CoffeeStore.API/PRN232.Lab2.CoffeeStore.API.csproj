@@ -18,8 +18,4 @@
       <ProjectReference Include="..\PRN232.Lab2.CoffeeStore.Services\PRN232.Lab2.CoffeeStore.Services.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Include="swagger.json" />
-    </ItemGroup>
-
 </Project>

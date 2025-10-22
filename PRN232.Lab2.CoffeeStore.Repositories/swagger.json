@@ -478,16 +478,15 @@
         }
       }
     },
-    "/payments/{orderId}/create": {
-      "post": {
+    "/payments": {
+      "get": {
         "tags": [
           "Payment"
         ],
         "parameters": [
           {
             "name": "orderId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -959,13 +958,19 @@
         "additionalProperties": false
       },
       "CreateCategoryRequest": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 3,
+            "type": "string"
           },
           "description": {
+            "maxLength": 500,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           }
@@ -1083,7 +1088,8 @@
           },
           "categoryId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "isActive": {
             "type": "boolean"

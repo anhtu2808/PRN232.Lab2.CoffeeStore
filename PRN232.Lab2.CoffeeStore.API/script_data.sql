@@ -37,7 +37,7 @@ INSERT INTO Users (UserId, Username, Email, PasswordHash, Role)
 VALUES
     ('11111111-1111-1111-1111-111111111111', 'john.doe', 'john.doe@example.com', 'hashed_password_1_placeholder', 'User'),
     ('22222222-2222-2222-2222-222222222222', 'jane.smith', 'jane.smith@example.com', 'hashed_password_2_placeholder', 'User'),
-    ('33333333-3333-3333-3333-333333333333', 'admin', 'admin@example.com', '$2a$11$c1y.lGkRgSLJRtRuOCZn7OXwA6lEZJdUuK3PlwIXtX.ZO0urrVr9S', 'Admin'),
+    ('33333333-3333-3333-3333-333333333333', 'admin', 'admin@example.com', '$2a$11$V4.bg/xR46aDiQESlwZkduiwpEItOzhIlCJw/5hBu00PMjmCjUlya', 'Admin'),
     ('44444444-4444-4444-4444-444444444444', 'anhtu', 'anhtu@example.com', '$2a$11$c1y.lGkRgSLJRtRuOCZn7OXwA6lEZJdUuK3PlwIXtX.ZO0urrVr9S' , 'User'),
     ('55555555-5555-5555-5555-555555555555', 'test.user2', 'test2@example.com', 'hashed_password_5_placeholder', 'User'),
     ('66666666-6666-6666-6666-666666666666', 'extra.user1', 'extra1@example.com', 'hashed_password_extra_1', 'User'),
