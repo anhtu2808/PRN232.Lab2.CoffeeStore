@@ -6,6 +6,7 @@ using PRN232.Lab2.CoffeeStore.Models.Response.Auth;
 using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Models.Response.User;
 using PRN232.Lab2.CoffeeStore.Services.IService;
+using RefreshRequest = PRN232.Lab2.CoffeeStore.Models.Request.Auth.RefreshRequest;
 
 namespace PRN232.Lab2.CoffeeStore.API.Controller;
 

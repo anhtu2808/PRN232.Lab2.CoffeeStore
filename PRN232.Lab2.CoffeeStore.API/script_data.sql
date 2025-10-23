@@ -10,7 +10,6 @@ DELETE FROM OrderDetails WHERE OrderDetailId <> -1;
 DELETE FROM Payments WHERE PaymentId <> 0;
 DELETE FROM Orders WHERE OrderId <> 0;
 DELETE FROM RefreshTokens WHERE Id <> '00000000-0000-0000-0000-000000000000';
-DELETE FROM InvalidTokens WHERE TokenId <> -1;
 DELETE FROM Products WHERE ProductId <> 0;
 DELETE FROM Categories WHERE CategoryId <> 0;
 DELETE FROM Users WHERE UserId NOT IN ('33333233-3333-3333-3333-333333333333');
@@ -35,16 +34,16 @@ PRINT 'Seeding data with fixed IDs and identity inserts...';
 -- Seed Users thêm nhiều bản ghi (đã giữ 3,4 trước đó)
 INSERT INTO Users (UserId, Username, Email, PasswordHash, Role)
 VALUES
-    ('11111111-1111-1111-1111-111111111111', 'john.doe', 'john.doe@example.com', 'hashed_password_1_placeholder', 'User'),
-    ('22222222-2222-2222-2222-222222222222', 'jane.smith', 'jane.smith@example.com', 'hashed_password_2_placeholder', 'User'),
+    ('11111111-1111-1111-1111-111111111111', 'john.doe', 'john.doe@example.com', 'hashed_password_1_placeholder', 'Customer'),
+    ('22222222-2222-2222-2222-222222222222', 'jane.smith', 'jane.smith@example.com', 'hashed_password_2_placeholder', 'Customer'),
     ('33333333-3333-3333-3333-333333333333', 'admin', 'admin@example.com', '$2a$11$V4.bg/xR46aDiQESlwZkduiwpEItOzhIlCJw/5hBu00PMjmCjUlya', 'Admin'),
-    ('44444444-4444-4444-4444-444444444444', 'anhtu', 'anhtu@example.com', '$2a$11$c1y.lGkRgSLJRtRuOCZn7OXwA6lEZJdUuK3PlwIXtX.ZO0urrVr9S' , 'User'),
-    ('55555555-5555-5555-5555-555555555555', 'test.user2', 'test2@example.com', 'hashed_password_5_placeholder', 'User'),
-    ('66666666-6666-6666-6666-666666666666', 'extra.user1', 'extra1@example.com', 'hashed_password_extra_1', 'User'),
-    ('77777777-7777-7777-7777-777777777777', 'extra.user2', 'extra2@example.com', 'hashed_password_extra_2', 'User'),
-    ('88888888-8888-8888-8888-888888888888', 'extra.user3', 'extra3@example.com', 'hashed_password_extra_3', 'User'),
-    ('99999999-9999-9999-9999-999999999999', 'extra.user4', 'extra4@example.com', 'hashed_password_extra_4', 'User'),
-    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'extra.user5', 'extra5@example.com', 'hashed_password_extra_5', 'User');
+    ('44444444-4444-4444-4444-444444444444', 'anhtu', 'anhtu@example.com', '$2a$11$c1y.lGkRgSLJRtRuOCZn7OXwA6lEZJdUuK3PlwIXtX.ZO0urrVr9S' , 'Customer'),
+    ('55555555-5555-5555-5555-555555555555', 'test.user2', 'test2@example.com', 'hashed_password_5_placeholder', 'Customer'),
+    ('66666666-6666-6666-6666-666666666666', 'extra.user1', 'extra1@example.com', 'hashed_password_extra_1', 'Customer'),
+    ('77777777-7777-7777-7777-777777777777', 'extra.user2', 'extra2@example.com', 'hashed_password_extra_2', 'Customer'),
+    ('88888888-8888-8888-8888-888888888888', 'extra.user3', 'extra3@example.com', 'hashed_password_extra_3', 'Customer'),
+    ('99999999-9999-9999-9999-999999999999', 'extra.user4', 'extra4@example.com', 'hashed_password_extra_4', 'Customer'),
+    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'extra.user5', 'extra5@example.com', 'hashed_password_extra_5', 'Customer');
 GO
 
 -- Seed Categories
@@ -133,13 +132,13 @@ SET IDENTITY_INSERT OrderDetails ON;
 DECLARE @od INT = 1;
 DECLARE @order INT = 1;
 WHILE @od <= 40 -- ít nhất 40 dòng chi tiết để mỗi đơn có ~2 sản phẩm
-BEGIN
-INSERT INTO OrderDetails (OrderDetailId, OrderId, ProductId, Quantity, UnitPrice)
-VALUES (@od, @order, ((@od - 1) % 20) + 1, (@od % 3) + 1, (SELECT Price FROM Products WHERE ProductId = ((@od - 1) % 20) + 1));
+    BEGIN
+        INSERT INTO OrderDetails (OrderDetailId, OrderId, ProductId, Quantity, UnitPrice)
+        VALUES (@od, @order, ((@od - 1) % 20) + 1, (@od % 3) + 1, (SELECT Price FROM Products WHERE ProductId = ((@od - 1) % 20) + 1));
 
-SET @od = @od + 1;
+        SET @od = @od + 1;
         SET @order = CASE WHEN @order < 20 THEN @order + 1 ELSE 1 END;
-END
+    END
 SET IDENTITY_INSERT OrderDetails OFF;
 GO
 
@@ -148,17 +147,36 @@ SET IDENTITY_INSERT Payments ON;
 DECLARE @p INT = 1;
 DECLARE @o INT = 1;
 WHILE @p <= 20
-BEGIN
-INSERT INTO Payments (PaymentId, OrderId, Amount, Status, PaymentDate, PaymentMethod)
-VALUES (@p, @o, (SELECT SUM(Quantity*UnitPrice) FROM OrderDetails WHERE OrderId = @o), 'PENDING', DATEADD(day, -@o, GETDATE()), CASE @o % 3 WHEN 0 THEN 'Credit Card' WHEN 1 THEN 'PayPal' ELSE 'Cash' END);
+    BEGIN
+        INSERT INTO Payments (PaymentId, OrderId, Amount, Status, PaymentDate, PaymentMethod)
+        VALUES (
+                   @p,
+                   @o,
+                   (SELECT SUM(Quantity * UnitPrice) FROM OrderDetails WHERE OrderId = @o),
+                   CASE WHEN @o % 2 = 0 THEN 'COMPLETED' ELSE 'PENDING' END, -- 👈 xen kẽ
+                   DATEADD(day, -@o, GETDATE()),
+                   CASE @o % 3
+                       WHEN 0 THEN 'Credit Card'
+                       WHEN 1 THEN 'ZaloPay'
+                       ELSE 'Cash'
+                       END
+               );
 
-SET @p = @p + 1;
-        SET @o = @o + 1;
-END
+        SET @p += 1;
+        SET @o += 1;
+    END;
 SET IDENTITY_INSERT Payments OFF;
+
 GO
 
 -- Cập nhật Orders liên kết Payments
 UPDATE Orders SET PaymentId = OrderId WHERE PaymentId IS NULL;
 GO
+
+-- Seed RefreshTokens
+INSERT INTO RefreshTokens (Id, UserId, Token, ExpiresAt, CreatedAt)
+VALUES
+    ('15c6657c-2916-433d-a33a-eb6e0283b5e4', '44444444-4444-4444-4444-444444444444', 'n7+k1R0XNvsBZtf3dMOh4jITutK/DP+vExzutDs2XVc7A6ebAY452syve+rao79DbzlM33VMGKr4ei/8Gfc95g==', '3000-10-29 12:31:03.937', '2025-10-22 12:31:03.937');
+GO
+
 

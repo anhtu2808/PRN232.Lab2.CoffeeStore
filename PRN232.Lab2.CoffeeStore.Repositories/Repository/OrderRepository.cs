@@ -28,7 +28,7 @@ public class OrderRepository : GenericRepository<Order, int>, IOrderRepository
             query = query.Where(o => o.UserId == filter.UserId.Value);
         }
 
-        if (filter.Status.HasValue)
+        if (filter.Status != null)
         {
             string statusName = ((OrderStatus)filter.Status.Value).ToString();
             query = query.Where(o => o.Status == statusName);

@@ -32,4 +32,21 @@ public class JwtUtils
 
         return userId;
     }
+    
+    public List<string> GetCurrentUserRoles()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user == null)
+            return new List<string>();
+
+        return user.Claims
+            .Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
+            .Select(c => c.Value)
+            .ToList();
+    }
+    
+    public string? GetCurrentUserRole()
+    {
+        return GetCurrentUserRoles().FirstOrDefault();
+    }
 }

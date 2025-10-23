@@ -2,10 +2,15 @@ using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using AutoMapper;
 using Microsoft.Extensions.Options;
 using PRN232.Lab2.CoffeeStore.Models.Enums;
 using PRN232.Lab2.CoffeeStore.Models.Exception;
+using PRN232.Lab2.CoffeeStore.Models.Request.Common;
+using PRN232.Lab2.CoffeeStore.Models.Request.Payment;
 using PRN232.Lab2.CoffeeStore.Models.Request.ZaloPay;
+using PRN232.Lab2.CoffeeStore.Models.Response.Common;
+using PRN232.Lab2.CoffeeStore.Models.Response.Payment;
 using PRN232.Lab2.CoffeeStore.Repositories.Entity;
 using PRN232.Lab2.CoffeeStore.Repositories.UnitOfWork;
 using PRN232.Lab2.CoffeeStore.Services.IService;
@@ -17,12 +22,14 @@ public class PaymentService : IPaymentService
     private readonly IUnitOfWork _unitOfWork;
     private readonly HttpClient _httpClient;
     private readonly ZaloPayConfig _zaloPayConfig;
+    private readonly IMapper _mapper;
 
-    public PaymentService(IUnitOfWork unitOfWork, IOptions<ZaloPayConfig> zaloPayConfig)
+    public PaymentService(IUnitOfWork unitOfWork, IOptions<ZaloPayConfig> zaloPayConfig, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _httpClient = new HttpClient();
         _zaloPayConfig = zaloPayConfig.Value;
+        _mapper = mapper;
     }
 
     public async Task<string> GetPaymentUrlAsync(int orderId)
@@ -88,6 +95,19 @@ public class PaymentService : IPaymentService
 
         return value!.ToString()!;
     }
+
+    public async Task<PageResponse<PaymentResponse>> GetPaymentsAsync(PaymentFilter filter)
+    {
+        var paymentPages = await _unitOfWork.Payments.GetPaymentsAsync(filter);
+        var paymentResponse = _mapper.Map<List<PaymentResponse>>(paymentPages.Items);
+        return new PageResponse<PaymentResponse>(
+            paymentResponse,
+            paymentPages.TotalCount,
+            paymentPages.Page,
+            paymentPages.PageSize
+        );
+    }
+
 
     public async Task<bool> VerifyPaymentAsync(ZaloPayCallbackRequest request)
     {

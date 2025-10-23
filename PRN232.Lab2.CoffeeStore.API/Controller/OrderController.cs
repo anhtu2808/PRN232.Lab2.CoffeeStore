@@ -26,6 +26,12 @@ public class OrderController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllOrders([FromQuery] OrderFilter filter)
     {
+        var role = _jwtUtils.GetCurrentUserRole();
+        if (role == "Customer")
+        {
+            var userId = _jwtUtils.GetUserIdFromToken();
+            filter.UserId = Guid.Parse(userId);
+        }
         var orders = await _orderService.GetAllOrdersAsync(filter);
         var response = new ApiResponse<PageResponse<OrderResponse>>
         {
@@ -93,6 +99,12 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> DeleteOrder(int id)
     {
         await _orderService.DeleteOrderAsync(id);
-        return NoContent();
+
+        return Ok(new ApiResponse<object>
+        {
+            StatusCode = 200,
+            Message = "Order deleted successfully.",
+            Data = null
+        });
     }
 }

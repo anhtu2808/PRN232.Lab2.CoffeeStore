@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PRN232.Lab2.CoffeeStore.Models.Request.Common;
+using PRN232.Lab2.CoffeeStore.Models.Request.Payment;
 using PRN232.Lab2.CoffeeStore.Models.Request.ZaloPay;
+using PRN232.Lab2.CoffeeStore.Models.Response.Common;
 using PRN232.Lab2.CoffeeStore.Services.IService;
 
 namespace PRN232.Lab2.CoffeeStore.API.Controller;
@@ -20,6 +23,25 @@ public class PaymentController : ControllerBase
 
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetPayments(
+        [FromQuery] PaymentFilter filter
+    )
+    {
+        var pagePayment = await _paymentService.GetPaymentsAsync(filter);
+
+        var response = new ApiResponse<object>
+        {
+            StatusCode = 200,
+            Message = "Payments retrieved successfully.",
+            Data = pagePayment
+        };
+
+        return Ok(response);
+    }
+
+
+    [HttpGet("/zalopay-link")]
     [Authorize]
     public async Task<IActionResult> GetPaymentUrl([FromQuery] int orderId)
     {
@@ -32,7 +54,7 @@ public class PaymentController : ControllerBase
     }
 
 
-    [HttpPost("callback")] 
+    [HttpPost("callback")]
     public async Task<IActionResult> ZaloPayReturn([FromBody] ZaloPayCallbackRequest request)
     {
         // Gọi service để xác thực chữ ký và dữ liệu callback
@@ -48,7 +70,4 @@ public class PaymentController : ControllerBase
             return Redirect("https://your-frontend-url.com/payment-failure");
         }
     }
-
-
-    
 }
